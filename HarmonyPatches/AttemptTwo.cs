@@ -1,12 +1,10 @@
 ﻿using HarmonyLib;
-using UnityEngine;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
-using System.Collections;
+using UnityEngine;
+using ImBlindedByTheLights.LightAdapters;
 using Object = UnityEngine.Object;
 
 namespace ImBlindedByTheLights.HarmonyPatches {
@@ -87,7 +85,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 
 			// Now that this propagated to all the environment stuff, look for all the lights which are on
 
-			var lights = Object.FindObjectsOfType<TubeBloomPrePassLight>().Select(x => (ILightAdapter)new UnifiedTubelight(x))
+			var lights = Object.FindObjectsOfType<TubeBloomPrePassLight>().Select(x => (ILightAdapter)new UnifiedTubeBloomPrePassLight(x))
 				.Concat(Object.FindObjectsOfType<LightmapLightsWithIds>().Select(x => new UnifiedLightmapLightsWithIds(x)))
 				.Concat(Object.FindObjectsOfType<MaterialLightWithId>().Select(x => new UnifiedMaterialLightWithId(x)))
 				.Concat(Object.FindObjectsOfType<DirectionalLight>().Select(x => new UnifiedDirectionalLight(x)))

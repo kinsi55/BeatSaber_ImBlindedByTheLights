@@ -1,7 +1,5 @@
-﻿
-using System.Reflection;
+﻿using IPA.Config.Stores;
 using System.Runtime.CompilerServices;
-using IPA.Config.Stores;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
@@ -10,7 +8,7 @@ namespace ImBlindedByTheLights {
 		public static Config Instance { get; set; }
 
 		public virtual bool enablePlugin { get; set; } = true;
-		
+
 		public virtual Color staticColor { get; set; } = Color.gray;
 
 		public virtual bool staticInHeadset { get; set; } = true;
