@@ -22,6 +22,8 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 						break;
 					case BeatmapEventType.Event2:
 					case BeatmapEventType.Event3:
+					case BeatmapEventType.Event12:
+					case BeatmapEventType.Event13:
 						if(Config.Instance.disableRotatingLasers) continue;
 						break;
 					case BeatmapEventType.Event4:
