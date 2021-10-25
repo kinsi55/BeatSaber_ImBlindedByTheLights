@@ -25,7 +25,7 @@ Generally, this works with every environment, however on some there is issues wh
 
 | Status |      Environment      | Note |
 |:--------:|:-------------|-------|
-| 💯 | The First, Origins, Triangle, Nice, Big Mirror, Dragons, KDA, Crab Rave, Panic, Rocket, Green Day (Both), Timbaland, Fit Beat, Linkin Park, Kaleidoscope, BTS | If the Environment features Rings they probably are not in the same position as they'd be with normal Static Lights |
+| 💯 | The First, Origins, Triangle, Nice, Big Mirror, Dragons, KDA, Crab Rave, Panic, Rocket, Green Day (Both), Timbaland, Fit Beat, Linkin Park, Kaleidoscope, BTS, Spooky | If the Environment features Rings they probably are not in the same position as they'd be with normal Static Lights |
 | ✔️ | Billie | Some things still faintly light up |
 | ✖ | Interscope | Still a lot of lighting left |
 

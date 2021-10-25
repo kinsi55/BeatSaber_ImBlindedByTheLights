@@ -59,24 +59,5 @@ namespace ImBlindedByTheLights {
 		public void OnApplicationQuit() {
 			harmony.UnpatchAll(harmony.Id);
 		}
-
-		public void Bench(Action a) {
-			var sw = new System.Diagnostics.Stopwatch();
-			sw.Start();
-			for(var i = 0; i < 500; i++) {
-				a();
-			}
-			sw.Stop();
-
-			Console.WriteLine("Took {0}", sw.ElapsedMilliseconds);
-		}
 	}
-
-	//public static class lol {
-	//	public static string GetPath(this Transform current) {
-	//		if(current.parent == null)
-	//			return "/" + current.name;
-	//		return current.parent.GetPath() + "/" + current.name;
-	//	}
-	//}
 }

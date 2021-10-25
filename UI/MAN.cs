@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ImBlindedByTheLights.UI {
-
 	class MAN {
 		Config config = Config.Instance;
 

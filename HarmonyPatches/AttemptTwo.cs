@@ -41,8 +41,10 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 		}
 	}
 
-
-	public static class LightSwitch {
+#if DEBUG
+	public
+#endif
+	static class LightSwitch {
 		public static ILightAdapter[] staticLights;
 
 		public static ILightAdapter[] yeetedLights;
@@ -77,8 +79,6 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			ForceColorOnInit.enable = true;
 			yield return 0;
 
-			//reflectionProbeDefaultPosition = Shader.GetGlobalVector(reflectionProbePositionKeywordId);
-
 			// See BeatmapDataLoader::GetBeatmapDataFromBeatmapSaveData
 			controller.SendBeatmapEventDidTriggerEvent(new BeatmapEventData(0, BeatmapEventType.Event0, 1, 1));
 			controller.SendBeatmapEventDidTriggerEvent(new BeatmapEventData(0, BeatmapEventType.Event4, 1, 1));
@@ -98,22 +98,20 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 				//.Concat(Resources.FindObjectsOfTypeAll<MeshRenderer>().Where(x => x.material.HasProperty("_Color")).Select(x => new UnifiedMaterialColor(x)))
 				.ToArray();
 
-			staticLights = lights.Where(x => x.CheckIsStatic()).ToArray();
+			staticLights = lights.Where(x => x.CheckShouldBeActiveWhenStatic()).ToArray();
 
 			//foreach(var x in lights) {
 			//	Console.WriteLine("{0} Start color {1}", x.gameObject.transform.GetPath(), x.color);
 			//}
 
 
-			yeetedLights = lights.Where(x => !x.CheckIsStatic())
-				//.Concat(new GameObject[] { 
-				//	GameObject.Find("SidePSL"), GameObject.Find("SidePSR"), 
-				//	GameObject.Find("DragonsSidePSL"), GameObject.Find("DragonsSidePSR") 
-				//}.Where(x => x != null))
+			yeetedLights = lights.Where(x => !x.CheckShouldBeActiveWhenStatic())
+				.Concat(Object.FindObjectsOfType<ParticleSystemEventEffect>().Select(x => new UnifiedDynamicGameObject(x.gameObject)))
 				.ToArray();
 
-
+#if DEBUG
 			Plugin.Log.Debug(string.Format("Found Lights! Static: {0} Dynamic: {1}", staticLights.Length, yeetedLights.Length));
+#endif
 
 			if(Config.Instance.keepRingSpinsInStatic)
 				yield break;
@@ -131,8 +129,9 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			fixedPositionThings = _fixedPositionThings;
 			staticRotations = _fixedPositionThings.Select(x => x.rotation).ToArray();
 			staticPositions = _fixedPositionThings.Select(x => x.position).ToArray();
-
+#if DEBUG
 			Plugin.Log.Debug(string.Format("Found {0} fixedPositionThings!", fixedPositionThings.Length));
+#endif
 		}
 
 		public static bool lightsEnabled { get; private set; } = true;
@@ -198,7 +197,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 	}
 
 
-	public class LightSwitchHandler : MonoBehaviour {
+	class LightSwitchHandler : MonoBehaviour {
 		Camera cam;
 
 		void Awake() {

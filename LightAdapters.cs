@@ -8,13 +8,16 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ImBlindedByTheLights {
-	public interface ILightAdapter {
+#if DEBUG
+	public
+#endif
+	interface ILightAdapter {
 		public GameObject gameObject { get; }
 
 		public void SetStatic();
 		public void Restore();
 		public void SetActive(bool active);
-		public bool CheckIsStatic();
+		public bool CheckShouldBeActiveWhenStatic();
 	}
 
 	class UnifiedTubelight : ILightAdapter {
@@ -44,7 +47,7 @@ namespace ImBlindedByTheLights {
 		}
 
 		public void Restore() => color = backupColor;
-		public bool CheckIsStatic() => t.color.r < 0;
+		public bool CheckShouldBeActiveWhenStatic() => t.color.r < 0;
 	}
 
 	class UnifiedDirectionalLight : ILightAdapter {
@@ -71,7 +74,7 @@ namespace ImBlindedByTheLights {
 		}
 
 		public void Restore() => t.color = backupColor;
-		public bool CheckIsStatic() => t.color.r < 0;
+		public bool CheckShouldBeActiveWhenStatic() => t.color.r < 0;
 	}
 
 	class UnifiedMaterialLightWithId : ILightAdapter {
@@ -95,7 +98,7 @@ namespace ImBlindedByTheLights {
 		}
 
 		public void Restore() => t.ColorWasSet(backupColor);
-		public bool CheckIsStatic() => t.color.r < 0;
+		public bool CheckShouldBeActiveWhenStatic() => t.color.r < 0;
 	}
 
 	class UnifiedMaterialColor : ILightAdapter {
@@ -119,7 +122,7 @@ namespace ImBlindedByTheLights {
 		public void SetActive(bool active) {}
 
 		public void Restore() => t.color = backupColor;
-		public bool CheckIsStatic() => t.color.r > 0;
+		public bool CheckShouldBeActiveWhenStatic() => t.color.r > 0;
 	}
 
 	class UnifiedBloomPrePassBackgroundColorsGradient : ILightAdapter {
@@ -143,7 +146,7 @@ namespace ImBlindedByTheLights {
 		public void SetActive(bool active) {}
 
 		public void Restore() => t.tintColor = backupColor;
-		public bool CheckIsStatic() => true;
+		public bool CheckShouldBeActiveWhenStatic() => true;
 	}
 
 	class UnifiedMaterialPropertyBlockColorSetter : ILightAdapter {
@@ -165,7 +168,7 @@ namespace ImBlindedByTheLights {
 		public void SetActive(bool active) { }
 
 		public void Restore() => t.SetColor(backupColor);
-		public bool CheckIsStatic() => t.color.a > 0 && t.color.a < 0.003f;
+		public bool CheckShouldBeActiveWhenStatic() => t.color.a > 0 && t.color.a < 0.003f;
 	}
 
 	class UnifiedSpriteLightWithId : ILightAdapter {
@@ -193,10 +196,10 @@ namespace ImBlindedByTheLights {
 		}
 
 		public void Restore() => t.ColorWasSet(backupColor);
-		public bool CheckIsStatic() => t.color.r < 0;
+		public bool CheckShouldBeActiveWhenStatic() => t.color.r < 0;
 	}
 
-	public class UnifiedLightmapLightsWithIds : ILightAdapter {
+	class UnifiedLightmapLightsWithIds : ILightAdapter {
 		LightmapLightsWithIds t;
 
 		// Why is this private? Whats the getter for?!
@@ -207,8 +210,6 @@ namespace ImBlindedByTheLights {
 		LightmapLightsWithIds.LightIntensitiesData[] _lightIntensityData;
 		Color[] backupColors;
 
-		public static bool enable = true;
-
 		public UnifiedLightmapLightsWithIds(LightmapLightsWithIds t) {
 			this.t = t;
 			_lightIntensityData = (LightmapLightsWithIds.LightIntensitiesData[])FIELD_lightIntensityData.GetValue(t);
@@ -218,9 +219,6 @@ namespace ImBlindedByTheLights {
 		public GameObject gameObject => t.gameObject;
 
 		public void SetStatic() {
-			if(!enable)
-				return;
-
 			for(var i = 0; i < _lightIntensityData.Length; i++) {
 				backupColors[i] = (Color)FIELD_color.GetValue(_lightIntensityData[i]);
 				if(i != 3 && i != 0) {
@@ -233,12 +231,26 @@ namespace ImBlindedByTheLights {
 		}
 
 		public void Restore() {
-			for(var i = 1; i < _lightIntensityData.Length; i++) {
+			for(var i = 1; i < _lightIntensityData.Length; i++)
 				FIELD_color.SetValue(_lightIntensityData[i], backupColors[i]);
-			}
+
 			METHOD_lightIntensityData.Invoke(t, null);
 		}
 		public void SetActive(bool active) {}
-		public bool CheckIsStatic() => true;
+		public bool CheckShouldBeActiveWhenStatic() => true;
+	}
+
+	class UnifiedDynamicGameObject : ILightAdapter {
+		public GameObject gameObject { get; private set; }
+
+		public UnifiedDynamicGameObject(GameObject t) {
+			gameObject = t;
+		}
+
+		public void SetStatic() => SetActive(false);
+
+		public void Restore() => SetActive(true);
+		public void SetActive(bool active) => gameObject.SetActive(active);
+		public bool CheckShouldBeActiveWhenStatic() => false;
 	}
 }
