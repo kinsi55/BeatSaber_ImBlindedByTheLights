@@ -1,0 +1,74 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<vertical>
+		<modifier-container child-expand-width='true' horizontal-fit='PreferredSize'>
+			<macro.as-host host='config'>
+				<toggle-setting value="enablePlugin" text="Enable Plugin" apply-on-change="true"
+					hover-hint='Quick Setting to toggle all plugin functionality'
+				/>
+				<color-setting value="staticColor" text="Static color" apply-on-change="true"/>
+				<toggle-setting value="staticInHeadset" text="Static in Headset" apply-on-change="true"/>
+				<toggle-setting value="staticOnDesktop" text="Static on Desktop" apply-on-change="true"/>
+			</macro.as-host>
+			<button text='Extra Settings' click-event='ShowExtraSettings'/>
+		</modifier-container>
+		<horizontal>
+			<text text="~version" align="Center" font-size="3" font-color="#CC6E3B"></text>
+			<clickable-text text='♥ Donate' font-size="4" align="Center" click-event="OpenSponsorModal" on-click="OpenSponsorsModal"/>
+		</horizontal>
+	</vertical>
+	<modal move-to-center='true' hide-event='CloseSponsorModal' show-event='OpenSponsorModal' size-delta-x='80' size-delta-y='82'>
+		<vertical preferred-width='80' vertical-fit='PreferredSize' pad-left='2' pad-right='2' spacing='2' child-expand-width='true'>
+			<horizontal pad-bottom='2' pad-top='1'>
+				<horizontal bg='panel-top-gradient'>
+					<text text="Ooh, I'm blinded by the lights - Sponsors" align='Center' font-size='4'/>
+				</horizontal>
+			</horizontal>
+			<text text='Are you enjoying my stuff and want to support me?' align='Center'/>
+			<horizontal>
+				<primary-button text='Open Website on Desktop' on-click='OpenSponsorsLink'/>
+				<button text='Close' click-event='CloseSponsorModal'/>
+			</horizontal>
+			<text text='Current sponsors' align='Center'/>
+			<vertical horizontal-fit='Unconstrained' vertical-fit='Unconstrained' preferred-height='45'>
+				<text-page id='sponsorsText' text='Loading...'/>
+			</vertical>
+		</vertical>
+	</modal>
+	
+	<modal move-to-center='true' show-event='ShowExtraSettings' hide-event='CloseExtraSettings' size-delta-x='80' size-delta-y='55'>
+		<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad-left='3' pad-right='3' child-expand-width='true' preferred-width='80' preferred-height='50'>
+			<horizontal pad-bottom='4' pad-top='1'>
+				<horizontal bg='panel-top-gradient'>
+					<text text="Ooh, I'm blinded by the lights - Extra Settings" align='Center' font-size='4'/>
+				</horizontal>
+			</horizontal>
+			<vertical horizontal-fit='Unconstrained' preferred-height='80' child-expand-height='false'>
+				<macro.as-host host='config'>
+					<toggle-setting
+						text='Keep Ring Spins for Static lights' apply-on-change='true' value='keepRingSpinsInStatic'
+						hover-hint='Keeps stuff like ring spins and environment movements active for the static side'
+					/>
+					<toggle-setting
+						text='Disable Back Lasers' bind-value='true' apply-on-change='true' value='disableBackLasers'
+						hover-hint='Disables the Back Lasers for the non-static side'
+					/>
+					<toggle-setting
+						text='Disable Rotating Lasers' bind-value='true' apply-on-change='true' value='disableRotatingLasers'
+						hover-hint='Disables the Rotating Lasers for the non-static side'
+					/>
+					<toggle-setting
+						text='Disable Ring Lights' bind-value='true' apply-on-change='true' value='disableRingLights'
+						hover-hint='Disables the Ring Lights for the non-static side'
+					/>
+					<toggle-setting
+						text='Disable Center Lights' bind-value='true' apply-on-change='true' value='disableCenterLights'
+						hover-hint='Disables the Center Lights for the non-static side'
+					/>
+				</macro.as-host>
+			</vertical>
+			<horizontal pad-top='4' pad-bottom='2' child-expand-height='false'>
+				<primary-button text='Close' click-event='CloseExtraSettings'/>
+			</horizontal>
+		</vertical>
+	</modal>
+</bg>
