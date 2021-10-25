@@ -34,3 +34,7 @@ Generally, this works with every environment, however on some there is issues wh
 - Option that allows you to keep Ring Spins active with Static lights
 - Can define a custom static-color to use while keeping a different lighting preset active
 - Toggles to disable specific light types (Back Lasers, Ring Lights, Rotating Lasers, Center lights)
+
+### Incompatible Plugins
+
+- Does currently not properly work with BS Plus' Light Intensity override
