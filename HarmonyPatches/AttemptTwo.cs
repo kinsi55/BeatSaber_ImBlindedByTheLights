@@ -198,7 +198,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 		static void Postfix(BloomPrePass __instance) {
 			var cam = __instance.GetComponent<Camera>();
 
-			if(cam == null)
+			if(cam == null || __instance.gameObject.GetComponent<LightSwitchHandler>() != null)
 				return;
 
 			__instance.gameObject.AddComponent<LightSwitchHandler>();
@@ -213,11 +213,27 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			cam = GetComponent<Camera>();
 		}
 
+		int culls = 0;
+
+		void LateUpdate() => culls = 0;
+
 		void OnPreCull() {
-			if((cam.stereoTargetEye != StereoTargetEyeMask.None && Config.Instance.staticInHeadset) || (cam.stereoTargetEye == StereoTargetEyeMask.None && Config.Instance.staticOnDesktop))
+			if(culls++ != 0)
+				return;
+
+			//System.Console.WriteLine("OnPreCull {0} {1} {2}", cam.transform?.parent?.name, cam.stereoTargetEye, cam.stereoActiveEye);
+
+			if((cam.stereoActiveEye != Camera.MonoOrStereoscopicEye.Mono && Config.Instance.staticInHeadset) || (cam.stereoActiveEye == Camera.MonoOrStereoscopicEye.Mono && Config.Instance.staticOnDesktop))
 				LightSwitch.DisableLights();
 		}
 
-		void OnPostRender() => LightSwitch.EnableLights();
+		void OnPostRender() {
+			if(culls-- != 1)
+				return;
+
+			//System.Console.WriteLine("OnPostRender {0} {1} {2}", cam.transform?.parent?.name, cam.stereoTargetEye, cam.stereoActiveEye);
+
+			LightSwitch.EnableLights();
+		}
 	}
 }
