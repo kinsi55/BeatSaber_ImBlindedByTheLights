@@ -35,7 +35,7 @@ namespace ImBlindedByTheLights.LightAdapters {
 		}
 
 		public void Restore() {
-			for(var i = 1; i < _lightIntensityData.Length; i++)
+			for(var i = 0; i < _lightIntensityData.Length; i++)
 				FIELD_color.SetValue(_lightIntensityData[i], backupColors[i]);
 
 			METHOD_lightIntensityData.Invoke(t, null);
