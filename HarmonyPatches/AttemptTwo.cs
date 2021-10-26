@@ -21,6 +21,12 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 		}
 
 		static void Postfix(ref Color __result) {
+			if(BasegameStaticLights.enabled) {
+				if(Config.Instance.enablePlugin)
+					__result = Config.Instance.staticColor;
+				return;
+			}
+
 			if(enable && Config.Instance.enablePlugin)
 				__result = STATIC_COLOR;
 		}
@@ -61,6 +67,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			yeetedLights = null;
 			fixedPositionThings = null;
 			lightsEnabled = true;
+			ForceColorOnInit.enable = false;
 		}
 
 		public static IEnumerator Init() {
@@ -68,7 +75,6 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			 * First, to find out what actually is lit in the current Env when static lights is on, 
 			 * act as tho we are on static lights!
 			 */
-
 			var controller = Resources.FindObjectsOfTypeAll<BeatmapObjectCallbackController>().FirstOrDefault();
 
 			if(controller == null)
@@ -76,6 +82,11 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 
 			ForceColorOnInit.enable = true;
 			yield return 0;
+
+			if(BasegameStaticLights.enabled) {
+				ForceColorOnInit.enable = false;
+				yield break;
+			}
 
 			// See BeatmapDataLoader::GetBeatmapDataFromBeatmapSaveData
 			controller.SendBeatmapEventDidTriggerEvent(new BeatmapEventData(0, BeatmapEventType.Event0, 1, 1));
