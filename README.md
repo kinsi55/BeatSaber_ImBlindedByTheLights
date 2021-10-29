@@ -15,9 +15,8 @@ Currently compatible game versions: **1.17.0 and up**
 ### Dependencies
 
 - BeatSaberMarkupLanguage (Available in ModAssistant)
-- **Camera2 / Camera Plus *or* builtin Smooth Camera**
+- **Camera2 / Camera Plus / LIV *or* builtin Smooth Camera**
 	- When having neither, the desktop view is just a duplicate of your VR view, thus this obviously does not work.
-	- Will probably work with LIV too - I dont have LIV, so I cannot confirm that.
 
 ### Environment compatability
 
