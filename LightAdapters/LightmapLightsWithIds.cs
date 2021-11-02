@@ -13,17 +13,15 @@ namespace ImBlindedByTheLights.LightAdapters {
 		FieldAccessor<LightmapLightsWithIds, LightmapLightsWithIds.LightIntensitiesData[]>.Accessor FIELD_lightIntensityData =
 			FieldAccessor<LightmapLightsWithIds, LightmapLightsWithIds.LightIntensitiesData[]>.GetAccessor("_lightIntensityData");
 
-		FieldAccessor<LightWithIds.LightData, Color>.Accessor FIELD_color =
-			FieldAccessor<LightWithIds.LightData, Color>.GetAccessor("_color");
+		Action<LightmapLightsWithIds> METHOD_HandleLightManagerDidChangeSomeColorsThisFrame = 
+			MethodAccessor<LightmapLightsWithIds, Action<LightmapLightsWithIds>>.GetDelegate("HandleLightManagerDidChangeSomeColorsThisFrame");
 
-		Action<LightmapLightsWithIds> METHOD_lightIntensityData = MethodAccessor<LightmapLightsWithIds, Action<LightmapLightsWithIds>>.GetDelegate("HandleLightManagerDidChangeSomeColorsThisFrame");
-
-		LightWithIds.LightData[] _lightIntensityData;
+		LightmapLightsWithIds.LightIntensitiesData[] _lightIntensityData;
 		Color[] backupColors;
 
 		public UnifiedLightmapLightsWithIds(LightmapLightsWithIds t) {
 			this.t = t;
-			_lightIntensityData = FIELD_lightIntensityData(ref t).Cast<LightWithIds.LightData>().ToArray();
+			_lightIntensityData = FIELD_lightIntensityData(ref t);
 			backupColors = new Color[_lightIntensityData.Length];
 		}
 
@@ -31,21 +29,21 @@ namespace ImBlindedByTheLights.LightAdapters {
 
 		public void SetStatic() {
 			for(var i = 0; i < _lightIntensityData.Length; i++) {
-				backupColors[i] = FIELD_color(ref _lightIntensityData[i]);
+				backupColors[i] = _lightIntensityData[i].color;
 				if(i != 3 && i != 0) {
-					FIELD_color(ref _lightIntensityData[i]) = Color.black;
+					_lightIntensityData[i].ColorWasSet(Color.black);
 				} else {
-					FIELD_color(ref _lightIntensityData[i]) = Config.Instance.staticColor;
+					_lightIntensityData[i].ColorWasSet(Config.Instance.staticColor);
 				}
 			}
-			METHOD_lightIntensityData(t);
+			METHOD_HandleLightManagerDidChangeSomeColorsThisFrame(t);
 		}
 
 		public void Restore() {
 			for(var i = 0; i < _lightIntensityData.Length; i++)
-				FIELD_color(ref _lightIntensityData[i]) = backupColors[i];
+				_lightIntensityData[i].ColorWasSet(backupColors[i]);
 
-			METHOD_lightIntensityData(t);
+			METHOD_HandleLightManagerDidChangeSomeColorsThisFrame(t);
 		}
 		public void SetActive(bool active) { }
 		public bool CheckShouldBeActiveWhenStatic() => true;
