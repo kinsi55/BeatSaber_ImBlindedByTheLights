@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Linq;
 
 namespace ImBlindedByTheLights.HarmonyPatches {
 	[HarmonyPatch(typeof(BeatmapDataTransformHelper), nameof(BeatmapDataTransformHelper.CreateTransformedBeatmapData))]
@@ -12,7 +13,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			if(Config.Instance.disableBackLasers || Config.Instance.disableCenterLights || Config.Instance.disableRingLights || Config.Instance.disableRotatingLasers) {
 				BeatmapData copyWithoutEvents = __result.GetCopyWithoutEvents();
 
-				foreach(var beatmapEventData in __result.beatmapEventsData) {
+				foreach(var beatmapEventData in __result.beatmapEventsData.OrderBy(x => x.time)) {
 					switch(beatmapEventData.type) {
 						case BeatmapEventType.Event0:
 							if(Config.Instance.disableBackLasers) continue;
