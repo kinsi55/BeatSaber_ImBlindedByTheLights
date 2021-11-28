@@ -3,7 +3,7 @@
     "id": "ImBlindedByTheLights",
     "name": "ImBlindedByTheLights",
     "author": "Kinsi55",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Allows you to have Static Lights in VR while keeping the normal Lightshow on the Desktop",
     "gameVersion": "1.17.0",
     "dependsOn": {

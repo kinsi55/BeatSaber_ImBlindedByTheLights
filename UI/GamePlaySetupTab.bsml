@@ -8,6 +8,7 @@
 				<color-setting value="staticColor" text="Static color" apply-on-change="true"/>
 				<toggle-setting value="staticInHeadset" text="Static in Headset" apply-on-change="true"/>
 				<toggle-setting value="staticOnDesktop" text="Static on Desktop" apply-on-change="true"/>
+				<toggle-setting value="staticWhenNoLights" text="Static if map has no lights" apply-on-change="true"/>
 			</macro.as-host>
 			<button text='Extra Settings' click-event='ShowExtraSettings'/>
 		</modifier-container>

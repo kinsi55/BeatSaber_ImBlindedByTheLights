@@ -21,7 +21,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 		}
 
 		static void Postfix(ref Color __result) {
-			if(BasegameStaticLights.enabled) {
+			if(BasegameStaticLights.enabled || (!FilterBeatmapLightEvents.endedUpWithAnyLights && Config.Instance.staticWhenNoLights)) {
 				if(Config.Instance.enablePlugin)
 					__result = Config.Instance.staticColor;
 				return;
@@ -93,6 +93,9 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			controller.SendBeatmapEventDidTriggerEvent(new BeatmapEventData(0, BeatmapEventType.Event4, 1, 1));
 
 			ForceColorOnInit.enable = false;
+
+			if(Config.Instance.staticWhenNoLights && !FilterBeatmapLightEvents.endedUpWithAnyLights)
+				yield break;
 
 			// Now that this propagated to all the environment stuff, look for all the lights which are on
 

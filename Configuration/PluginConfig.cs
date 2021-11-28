@@ -13,6 +13,7 @@ namespace ImBlindedByTheLights {
 
 		public virtual bool staticInHeadset { get; set; } = true;
 		public virtual bool staticOnDesktop { get; set; } = false;
+		public virtual bool staticWhenNoLights { get; set; } = true;
 
 		public virtual bool keepRingSpinsInStatic { get; set; } = false;
 		public virtual bool disableBackLasers { get; set; } = false;
