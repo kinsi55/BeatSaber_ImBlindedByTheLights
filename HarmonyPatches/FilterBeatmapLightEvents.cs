@@ -15,7 +15,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			if(Config.Instance.disableBackLasers || Config.Instance.disableCenterLights || Config.Instance.disableRingLights || Config.Instance.disableRotatingLasers) {
 				var x = (List<BeatmapEventData>)__result.beatmapEventsData;
 
-				for(var i = x.Count - 1; i > 0; i--) {
+				for(var i = x.Count; i-- > 0;) {
 					/*
 					 * Break affects the switchcase and removes the event
 					 * Continue is for the For loop and leaves the event
