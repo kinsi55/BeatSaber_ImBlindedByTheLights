@@ -13,43 +13,41 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 				return;
 
 			if(Config.Instance.disableBackLasers || Config.Instance.disableCenterLights || Config.Instance.disableRingLights || Config.Instance.disableRotatingLasers) {
-				var x = (List<BeatmapEventData>)__result.beatmapEventsData;
+				__result.GetFilteredCopy(x => {
+					if(!(x is BasicBeatmapEventData bbed))
+						return x;
 
-				for(var i = x.Count; i-- > 0;) {
-					/*
-					 * Break affects the switchcase and removes the event
-					 * Continue is for the For loop and leaves the event
-					 */
-					switch(x[i].type) {
-						case BeatmapEventType.Event0:
-							if(!Config.Instance.disableBackLasers) continue;
+					switch(bbed.basicBeatmapEventType) {
+						case BasicBeatmapEventType.Event0:
+							if(Config.Instance.disableBackLasers) return null;
 							break;
-						case BeatmapEventType.Event1:
-							if(!Config.Instance.disableBackLasers) continue;
+						case BasicBeatmapEventType.Event1:
+							if(Config.Instance.disableBackLasers) return null;
 							break;
-						case BeatmapEventType.Event2:
-						case BeatmapEventType.Event3:
-						case BeatmapEventType.Event12:
-						case BeatmapEventType.Event13:
-							if(!Config.Instance.disableRotatingLasers) continue;
+						case BasicBeatmapEventType.Event2:
+						case BasicBeatmapEventType.Event3:
+						case BasicBeatmapEventType.Event12:
+						case BasicBeatmapEventType.Event13:
+							if(Config.Instance.disableRotatingLasers) return null;
 							break;
-						case BeatmapEventType.Event4:
-							if(!Config.Instance.disableCenterLights) continue;
+						case BasicBeatmapEventType.Event4:
+							if(Config.Instance.disableCenterLights) return null;
 							break;
-						default:
-							continue;
 					}
-					x.RemoveAt(i);
-				}
+					return x;
+				});
 			}
 
 			endedUpWithAnyLights = false;
 
 			if(Config.Instance.staticWhenNoLights) {
-				foreach(var beatmapEventData in __result.beatmapEventsData) {
-					var lType = (int)beatmapEventData.type;
+				foreach(var x in __result.allBeatmapDataItems) {
+					if(!(x is BasicBeatmapEventData bbed))
+						continue;
 
-					if(lType >= 0 && lType < 8 && (beatmapEventData.value > 0 || beatmapEventData.floatValue > 0)) {
+					var lType = (int)bbed.basicBeatmapEventType;
+
+					if(lType >= 0 && lType < 8 && (bbed.value > 0 || bbed.floatValue > 0)) {
 						endedUpWithAnyLights = true;
 						break;
 					}

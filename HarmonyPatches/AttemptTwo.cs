@@ -75,13 +75,18 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			 * First, to find out what actually is lit in the current Env when static lights is on, 
 			 * act as tho we are on static lights!
 			 */
-			var controller = Resources.FindObjectsOfTypeAll<BeatmapObjectCallbackController>().FirstOrDefault();
+			yield return null;
+			var bcu = Object.FindObjectOfType<BeatmapCallbacksUpdater>();
+			if(bcu == null)
+				yield break;
+
+			var controller = IPA.Utilities.ReflectionUtil.GetField<BeatmapCallbacksController, BeatmapCallbacksUpdater>(bcu, "_beatmapCallbacksController");
 
 			if(controller == null)
 				yield break;
 
 			ForceColorOnInit.enable = true;
-			yield return 0;
+			yield return null;
 
 			if(BasegameStaticLights.enabled) {
 				ForceColorOnInit.enable = false;
@@ -89,8 +94,8 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			}
 
 			// See BeatmapDataLoader::GetBeatmapDataFromBeatmapSaveData
-			controller.SendBeatmapEventDidTriggerEvent(new BeatmapEventData(0, BeatmapEventType.Event0, 1, 1));
-			controller.SendBeatmapEventDidTriggerEvent(new BeatmapEventData(0, BeatmapEventType.Event4, 1, 1));
+			controller.TriggerBeatmapEvent(new BasicBeatmapEventData(0, BasicBeatmapEventType.Event0, 1, 1));
+			controller.TriggerBeatmapEvent(new BasicBeatmapEventData(0, BasicBeatmapEventType.Event4, 1, 1));
 
 			ForceColorOnInit.enable = false;
 
@@ -136,7 +141,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 			staticPositionBackup = new Vector3[staticRotationBackup.Length];
 
 			// We need to wait one more frame for these to be in the positions they should be
-			yield return 0;
+			yield return null;
 
 			fixedPositionThings = _fixedPositionThings;
 			staticRotations = _fixedPositionThings.Select(x => x.rotation).ToArray();
