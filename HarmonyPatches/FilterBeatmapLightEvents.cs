@@ -13,7 +13,7 @@ namespace ImBlindedByTheLights.HarmonyPatches {
 				return;
 
 			if(Config.Instance.disableBackLasers || Config.Instance.disableCenterLights || Config.Instance.disableRingLights || Config.Instance.disableRotatingLasers) {
-				__result.GetFilteredCopy(x => {
+				__result = __result.GetFilteredCopy(x => {
 					if(!(x is BasicBeatmapEventData bbed))
 						return x;
 
